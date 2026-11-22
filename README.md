@@ -1,14 +1,4 @@
-# Full desktop bundle: mango, waybar, swaync, rofi, fastfetch, wallpaper picker
-
-All black and white with one lavender accent in mango and waybar.
-
-## What goes where
-- mango/        -> ~/.config/mango/      (8 files, config.conf sources the rest)
-- waybar/       -> ~/.config/waybar/     (black island bar)
-- swaync/       -> ~/.config/swaync/     (notification center, black and white)
-- rofi/         -> ~/.config/rofi/       (launcher, black and white)
-- fastfetch/    -> ~/.config/fastfetch/  (Fedora logo, black and white)
-- local-bin/    -> ~/.local/bin/         (wallpaper-pick, rofi thumbnail grid)
+# My own config
 
 ## Before you install
 Back up your existing ~/.config/mango, waybar, swaync, rofi and fastfetch folders. The rofi config replaces the old S0LYER theme, and the swaync config replaces the old one with its icon set.
@@ -45,10 +35,3 @@ Log out and back in to start mango. autostart.conf starts swaync, waybar and the
 
 ## Packages
 mangowm, waybar, swaync, rofi, fastfetch, foot, firefox, dolphin, wlogout, swaylock, swaybg, blueman, pavucontrol, playerctl, brightnessctl, wireplumber (wpctl), ImageMagick (wallpaper thumbnails), libnotify (notify-send, optional), JetBrains Mono Nerd Font (icons).
-
-## Not tested on a real system
-- exec_once with an underscore: the mango docs show exec-once. If waybar does not start, change exec_once to exec-once in autostart.conf.
-- The swaync button "mmsg dispatch quit" depends on your mango version.
-- fastfetch module names and logo rendering.
-- Waybar's mango/workspaces module must exist in your Waybar build.
-- The wallpaper grid look and speed.
