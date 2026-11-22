@@ -1,0 +1,116 @@
+/* ~/.config/waybar/style.css
+   Black island theme. Accent is lavender to pink, the same as the active tag. */
+
+* {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+window#waybar {
+    background: transparent;
+    color: #f2f2f2;
+}
+
+/* Each module is its own black pill */
+#clock,
+#mpris,
+#pulseaudio,
+#network,
+#battery,
+#tray,
+#custom-power,
+#workspaces {
+    background: #000000;
+    color: #f2f2f2;
+    padding: 0 14px;
+    border-radius: 17px;
+    border: 1px solid #1c1c1c;
+}
+
+#clock {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+#mpris {
+    color: #b8a2ff;
+}
+
+#mpris.paused {
+    color: #7a7a7a;
+}
+
+/* Mango tags: the center pill */
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    padding: 0 9px;
+    margin: 3px 2px;
+    border-radius: 14px;
+    background: transparent;
+    color: #5a5a5a;
+}
+
+#workspaces button:hover {
+    background: #1c1c1c;
+    color: #ffffff;
+}
+
+#workspaces button.empty {
+    color: #333333;
+}
+
+#workspaces button.active {
+    background: linear-gradient(90deg, #b8a2ff, #ff9ecf);
+    color: #000000;
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    background: #ff5f5f;
+    color: #000000;
+}
+
+#pulseaudio.muted {
+    color: #5a5a5a;
+}
+
+#network.disconnected {
+    color: #ff5f5f;
+}
+
+#battery.warning {
+    color: #ffb86c;
+}
+
+#battery.critical {
+    color: #ff5f5f;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: #9eff9e;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+#custom-power {
+    color: #ff9ecf;
+    padding: 0 10px;
+}
+
+#custom-power:hover {
+    background: #1c1c1c;
+}

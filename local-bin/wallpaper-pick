@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# wallpaper-pick: choose, randomize or restore the wallpaper for mango (swaybg).
+#
+#   wallpaper-pick [pick]    thumbnail grid in rofi (default)
+#   wallpaper-pick random    random wallpaper, never the same one twice in a row
+#   wallpaper-pick restore   re-apply the last wallpaper (use this in autostart)
+#
+# Optional environment variables:
+#   WALLPAPER_DIR   folder to scan           (default: ~/Pictures/wallpapers)
+#   WALLPAPER_FILL  swaybg mode              (default: fill)
+
+set -u
+
+WALL_DIR="${WALLPAPER_DIR:-$HOME/Pictures/wallpapers}"
+FILL_MODE="${WALLPAPER_FILL:-fill}"
+STATE_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper-pick/last"
+THUMB_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper-pick/thumbs"
+THUMB_SIZE="360x200"
+
+# ImageMagick for thumbnails: "magick" (IM7) or "convert" (IM6). Empty if neither.
+if command -v magick >/dev/null 2>&1; then
+    IM_BIN=magick
+elif command -v convert >/dev/null 2>&1; then
+    IM_BIN=convert
+else
+    IM_BIN=""
+fi
+
+# Grid look: black, white outline, thumbnail cards.
+GRID_THEME='
+* { background-color: #000000; text-color: #ffffff; }
+window { width: 70%; border: 1px; border-color: #ffffff; border-radius: 12px; padding: 12px; }
+inputbar { border: 1px; border-color: #ffffff; border-radius: 10px; padding: 8px 12px; }
+listview { columns: 4; lines: 2; spacing: 14px; fixed-height: false; scrollbar: false; }
+element { orientation: vertical; padding: 6px; border: 2px; border-color: transparent; border-radius: 8px; }
+element selected.normal { border-color: #ffffff; background-color: transparent; }
+element-icon { size: 200px; }
+element-text { horizontal-align: 0.5; }
+'
+
+die() {
+    printf 'wallpaper-pick: %s\n' "$1" >&2
+    command -v notify-send >/dev/null 2>&1 && notify-send "wallpaper-pick" "$1"
+    exit 1
+}
+
+need() {
+    command -v "$1" >/dev/null 2>&1 || die "missing command: $1"
+}
+
+usage() {
+    sed -n '2,10p' "$0"
+}
+
+# Fill IMAGES with every picture under WALL_DIR, sorted case-insensitively.
+load_images() {
+    IMAGES=()
+    [[ -d "$WALL_DIR" ]] || die "wallpaper folder not found: $WALL_DIR"
+    while IFS= read -r -d '' path; do
+        IMAGES+=("$path")
+    done < <(find -L "$WALL_DIR" -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.bmp' \) \
+        -print0 | sort -z -f)
+    [[ ${#IMAGES[@]} -gt 0 ]] || die "no images found in $WALL_DIR"
+}
+
+# Print the cached thumbnail for $1, creating it on first use.
+# The cache key is the path plus modification time, so edited files get new thumbnails.
+thumb_for() {
+    local src="$1" key thumb
+    key=$(printf '%s:%s' "$src" "$(stat -c %Y -- "$src")" | sha1sum | cut -d' ' -f1)
+    thumb="$THUMB_CACHE/$key.jpg"
+    if [[ ! -s "$thumb" ]]; then
+        mkdir -p "$THUMB_CACHE"
+        "$IM_BIN" "$src[0]" -thumbnail "${THUMB_SIZE}^" -gravity center \
+            -extent "$THUMB_SIZE" -quality 85 "$thumb" 2>/dev/null || return 1
+    fi
+    printf '%s' "$thumb"
+}
+
+# Show the grid and print the chosen index (0-based). Prints nothing if cancelled.
+choose_in_grid() {
+    local i name thumb
+    for i in "${!IMAGES[@]}"; do
+        name=$(basename -- "${IMAGES[i]}")
+        if [[ -n "$IM_BIN" ]] && thumb=$(thumb_for "${IMAGES[i]}"); then
+            printf '%s\0icon\x1f%s\n' "$name" "$thumb"
+        else
+            printf '%s\n' "$name"
+        fi
+    done | rofi -dmenu -format i -i -p 'wallpaper' -show-icons -theme-str "$GRID_THEME"
+}
+
+# Set $1 as the wallpaper and remember it.
+apply() {
+    local file="$1"
+    [[ -f "$file" ]] || die "not a file: $file"
+    need swaybg
+    pkill -x swaybg 2>/dev/null
+    setsid -f swaybg -m "$FILL_MODE" -i "$file" >/dev/null 2>&1
+    mkdir -p "$(dirname -- "$STATE_FILE")"
+    printf '%s\n' "$file" > "$STATE_FILE"
+}
+
+pick_random() {
+    local current="" choice tries=0
+    [[ -f "$STATE_FILE" ]] && current=$(<"$STATE_FILE")
+    choice="${IMAGES[RANDOM % ${#IMAGES[@]}]}"
+    while [[ ${#IMAGES[@]} -gt 1 && "$choice" == "$current" && $tries -lt 20 ]]; do
+        choice="${IMAGES[RANDOM % ${#IMAGES[@]}]}"
+        tries=$((tries + 1))
+    done
+    apply "$choice"
+}
+
+restore_last() {
+    local last=""
+    [[ -f "$STATE_FILE" ]] && last=$(<"$STATE_FILE")
+    if [[ -n "$last" && -f "$last" ]]; then
+        apply "$last"
+    else
+        pick_random
+    fi
+}
+
+case "${1:-pick}" in
+    pick)
+        need rofi
+        load_images
+        index=$(choose_in_grid) || exit 0
+        if [[ "$index" =~ ^[0-9]+$ ]]; then
+            apply "${IMAGES[index]}"
+        fi
+        ;;
+    random)
+        load_images
+        pick_random
+        ;;
+    restore)
+        load_images
+        restore_last
+        ;;
+    -h|--help|help)
+        usage
+        ;;
+    *)
+        usage >&2
+        exit 2
+        ;;
+esac

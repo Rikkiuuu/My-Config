@@ -1,0 +1,16 @@
+/* rofi config for noir: application launcher, black and white */
+
+configuration {
+    modi:                 "drun,run";
+    show-icons:           true;
+    display-drun:         "apps";
+    display-run:          "run";
+    drun-display-format:  "{name}";
+    hover-select:         true;
+    kb-row-up:            "Up,Control+k";
+    kb-row-down:          "Down,Control+j";
+    kb-accept-entry:      "Return,KP_Enter";
+    me-accept-entry:      "MousePrimary";
+}
+
+@theme "~/.config/rofi/noir.rasi"
