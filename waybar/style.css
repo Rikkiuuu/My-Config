@@ -1,9 +1,7 @@
-/* ~/.config/waybar/style.css
-   Black island theme. Accent is lavender to pink, the same as the active tag. */
-
 * {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 13px;
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
     min-height: 0;
     border: none;
     box-shadow: none;
@@ -12,90 +10,101 @@
 
 window#waybar {
     background: transparent;
-    color: #f2f2f2;
+    color: #ffffff;
 }
 
-/* Each module is its own black pill */
+.modules-center {
+    background: #000000;
+    border: 1px solid #262626;
+    border-radius: 12px;
+    padding: 3px 8px;
+}
+
 #clock,
 #mpris,
+#custom-cava,
+#workspaces,
 #pulseaudio,
 #network,
-#battery,
 #tray,
-#custom-power,
-#workspaces {
-    background: #000000;
-    color: #f2f2f2;
-    padding: 0 14px;
-    border-radius: 17px;
-    border: 1px solid #1c1c1c;
+#custom-power {
+    background: transparent;
+    color: #ffffff;
+    padding: 0 7px;
 }
 
 #clock {
     color: #ffffff;
-    font-weight: bold;
-}
-
-#mpris {
-    color: #b8a2ff;
-}
-
-#mpris.paused {
-    color: #7a7a7a;
-}
-
-/* Mango tags: the center pill */
-#workspaces {
-    padding: 0 4px;
+    font-weight: 700;
 }
 
 #workspaces button {
-    padding: 0 9px;
-    margin: 3px 2px;
-    border-radius: 14px;
+    padding: 1px 7px;
+    margin: 1px 2px;
+    border-radius: 6px;
     background: transparent;
-    color: #5a5a5a;
+    color: #ffffff;
 }
 
 #workspaces button:hover {
-    background: #1c1c1c;
+    background: #262626;
     color: #ffffff;
 }
 
 #workspaces button.empty {
-    color: #333333;
+    background: transparent;
+    color: #666666;
+}
+
+#workspaces button.empty:nth-child(n+4) {
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-size: 0;
+    color: transparent;
+    background: transparent;
 }
 
 #workspaces button.active {
-    background: linear-gradient(90deg, #b8a2ff, #ff9ecf);
+    background: #ffffff;
     color: #000000;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 #workspaces button.urgent {
-    background: #ff5f5f;
+    background: #ffffff;
     color: #000000;
+    font-weight: 700;
 }
 
-#pulseaudio.muted {
-    color: #5a5a5a;
+#mpris {
+    color: #e5e5e5;
 }
 
+#mpris.paused {
+    color: #737373;
+}
+
+#custom-cava {
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+#workspaces {
+    padding: 0 4px;
+}
+
+
+#pulseaudio,
+#network {
+    color: #d4d4d4;
+}
+
+#pulseaudio.muted,
 #network.disconnected {
-    color: #ff5f5f;
-}
-
-#battery.warning {
-    color: #ffb86c;
-}
-
-#battery.critical {
-    color: #ff5f5f;
-}
-
-#battery.charging,
-#battery.plugged {
-    color: #9eff9e;
+    color: #525252;
 }
 
 #tray > .passive {
@@ -107,10 +116,10 @@ window#waybar {
 }
 
 #custom-power {
-    color: #ff9ecf;
-    padding: 0 10px;
+    color: #ffffff;
+    padding: 0 6px;
 }
 
 #custom-power:hover {
-    background: #1c1c1c;
+    color: #a3a3a3;
 }

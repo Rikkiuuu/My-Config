@@ -1,18 +1,18 @@
 {
-  // Fedora logo in black and white. Replace USERNAME with your user name.
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "type": "auto",
-    "source": "/home/USERNAME/.config/fastfetch/fedora-logo.png",
-    "width": 30,
-    "height": 15,
+    "type": "sixel",
+    "source": "/home/iko/.config/fastfetch/fedora-logo.png",
+    "width": 36,
+    "height": 21,
     "padding": {
       "top": 1,
-      "left": 2
+      "left": 2,
+      "right": 3
     }
   },
   "display": {
-    "separator": " → ",
+    "separator": " :: ",
     "color": {
       "keys": "white",
       "title": "white",
@@ -20,34 +20,73 @@
       "separator": "white"
     },
     "key": {
-      "width": 12
+      "width": 4
     }
   },
   "modules": [
-    "title",
     {
       "type": "custom",
-      "format": "────────────────────────────────"
+      "format": "┌────────────────── Hardware Info ──────────────────┐"
     },
-    "os",
-    "kernel",
-    "datetime",
-    "uptime",
-    "packages",
-    "shell",
     "break",
-    "de",
-    "wm",
-    "theme",
-    "icons",
-    "terminal",
-    "terminalfont",
+    {
+      "type": "host",
+      "key": "  "
+    },
+    {
+      "type": "cpu",
+      "key": "  "
+    },
+    {
+      "type": "gpu",
+      "key": " 󰢮 "
+    },
+    {
+      "type": "memory",
+      "key": "  "
+    },
+    {
+      "type": "disk",
+      "key": " 󰋊 "
+    },
+    {
+      "type": "display",
+      "key": " 󰍹 "
+    },
     "break",
-    "host",
-    "cpu",
-    "gpu",
-    "memory",
-    "disk",
-    "localip"
+    {
+      "type": "custom",
+      "format": "├────────────────── Software Info ──────────────────┤"
+    },
+    "break",
+    {
+      "type": "os",
+      "key": "  "
+    },
+    {
+      "type": "kernel",
+      "key": "  "
+    },
+    {
+      "type": "wm",
+      "key": "  "
+    },
+    {
+      "type": "datetime",
+      "key": " 󰃰 "
+    },
+    {
+      "type": "shell",
+      "key": "  "
+    },
+    {
+      "type": "packages",
+      "key": " 󰏖 "
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "└───────────────────────────────────────────────────┘"
+    }
   ]
 }

@@ -1,17 +1,26 @@
-// ~/.config/waybar/config.jsonc
-// Black "island" bar: floating pills, mango tags in the middle.
 {
   "layer": "top",
   "position": "top",
-  "height": 34,
-  "spacing": 8,
+  "height": 30,
   "margin-top": 6,
   "margin-left": 12,
   "margin-right": 12,
 
-  "modules-left": ["clock", "mpris"],
-  "modules-center": ["mango/workspaces"],
-  "modules-right": ["pulseaudio", "network", "battery", "tray", "custom/power"],
+  "modules-center": [
+    "clock",
+    "mango/workspaces",
+    "custom/cava",
+    "mpris",
+    "pulseaudio",
+    "network",
+    "tray",
+    "custom/power"
+  ],
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "tooltip-format": "{:%A, %d %B %Y}"
+  },
 
   "mango/workspaces": {
     "format": "{index}",
@@ -21,47 +30,43 @@
     "overview-label": "OVERVIEW"
   },
 
-  "clock": {
-    "format": "{:%H:%M}",
-    "tooltip-format": "{:%A, %d %B %Y}"
-  },
-
-  "mpris": {
+   "mpris": {
     "format": "{player_icon} {dynamic}",
     "format-paused": "{status_icon} {dynamic}",
-    "dynamic-len": 36,
-    "player-icons": { "default": "▶" },
-    "status-icons": { "paused": "⏸" }
+    "dynamic-len": 29,
+    "player-icons": { "default": "" },
+    "status-icons": { "paused": "" }
   },
+
+  "custom/cava": {
+    "exec": "~/.config/waybar/cava.sh",
+    "format": "{}"
+  },
+
 
   "pulseaudio": {
     "format": "{icon} {volume}%",
-    "format-muted": "muted",
-    "format-icons": { "default": ["🔈", "🔉", "🔊"] },
+    "format-muted": " muted",
+    "format-icons": {
+      "default": ["", "", ""]
+    },
     "on-click": "pavucontrol"
   },
 
   "network": {
-    "format-wifi": "{signalStrength}%",
-    "format-ethernet": "eth",
-    "format-disconnected": "offline",
+    "format-wifi": " {signalStrength}%",
+    "format-ethernet": " eth",
+    "format-disconnected": " off",
     "tooltip-format-wifi": "{essid} ({signalStrength}%)"
   },
 
-  "battery": {
-    "format": "{capacity}%",
-    "format-charging": "{capacity}% ⚡",
-    "format-plugged": "{capacity}%",
-    "states": { "warning": 25, "critical": 10 }
-  },
-
   "tray": {
-    "icon-size": 16,
-    "spacing": 8
+    "icon-size": 14,
+    "spacing": 6
   },
 
   "custom/power": {
-    "format": "⏻",
+    "format": "",
     "tooltip": false,
     "on-click": "wlogout"
   }
